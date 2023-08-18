@@ -50,6 +50,12 @@ public class Startup
                 // refresh tokens flow
                 .AllowRefreshTokenFlow();
 
+            // ENMESHED SETTINGS
+            options.AddDevelopmentSigningCertificate();
+            options.AddDevelopmentEncryptionCertificate();
+            options.AllowPasswordFlow();
+            options.SetAccessTokenLifetime(TimeSpan.FromSeconds(300));
+
             options
                 .SetAuthorizationEndpointUris("/connect/authorize")
                 .SetTokenEndpointUris("/connect/token")
@@ -69,7 +75,17 @@ public class Startup
                 .UseAspNetCore()
                 .EnableTokenEndpointPassthrough()
                 .EnableAuthorizationEndpointPassthrough()
-                .EnableUserinfoEndpointPassthrough();
+                .EnableUserinfoEndpointPassthrough()
+                // ENMESHED SETTINGS
+                .DisableTransportSecurityRequirement();
+
+            options.DisableTokenStorage();
+        })
+        .AddValidation(options =>
+        {
+            // Import the configuration (like valid issuer and the signing certificate) from the local OpenIddict server instance.
+            options.UseLocalServer();
+            options.UseAspNetCore();
         });
 
         services.AddHostedService<TestData>();
