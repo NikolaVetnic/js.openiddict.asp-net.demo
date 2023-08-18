@@ -42,15 +42,18 @@ public class Startup
         .AddServer(options =>
         {
             options
-                .AllowClientCredentialsFlow();
-
-            options
+                // authorization code flow
                 .AllowAuthorizationCodeFlow()
-                .RequireProofKeyForCodeExchange();
+                .RequireProofKeyForCodeExchange()
+                // client credentials flow
+                .AllowClientCredentialsFlow()
+                // refresh tokens flow
+                .AllowRefreshTokenFlow();
 
             options
                 .SetAuthorizationEndpointUris("/connect/authorize")
-                .SetTokenEndpointUris("/connect/token");
+                .SetTokenEndpointUris("/connect/token")
+                .SetUserinfoEndpointUris("/connect/userinfo");
 
             // Encryption and signing of tokens
             options
@@ -65,7 +68,8 @@ public class Startup
             options
                 .UseAspNetCore()
                 .EnableTokenEndpointPassthrough()
-                .EnableAuthorizationEndpointPassthrough();
+                .EnableAuthorizationEndpointPassthrough()
+                .EnableUserinfoEndpointPassthrough();
         });
 
         services.AddHostedService<TestData>();
@@ -81,6 +85,7 @@ public class Startup
         app.UseStaticFiles();
         app.UseRouting();
         app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
