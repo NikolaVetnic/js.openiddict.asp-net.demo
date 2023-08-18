@@ -45,6 +45,11 @@ public class Startup
                 .AllowClientCredentialsFlow();
 
             options
+                .AllowAuthorizationCodeFlow()
+                .RequireProofKeyForCodeExchange();
+
+            options
+                .SetAuthorizationEndpointUris("/connect/authorize")
                 .SetTokenEndpointUris("/connect/token");
 
             // Encryption and signing of tokens
@@ -59,7 +64,8 @@ public class Startup
             // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
             options
                 .UseAspNetCore()
-                .EnableTokenEndpointPassthrough();
+                .EnableTokenEndpointPassthrough()
+                .EnableAuthorizationEndpointPassthrough();
         });
 
         services.AddHostedService<TestData>();

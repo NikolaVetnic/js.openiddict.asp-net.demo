@@ -41,9 +41,9 @@ public class TestData : IHostedService
 
                     OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                     OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
-                    OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
 
                     OpenIddictConstants.Permissions.Prefixes.Scope + "api",
+
                     OpenIddictConstants.Permissions.ResponseTypes.Code
                 }
             }, cancellationToken);
