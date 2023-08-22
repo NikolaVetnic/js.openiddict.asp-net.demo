@@ -97,6 +97,31 @@ public class AuthorizationController : Controller
             claimsPrincipal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
         }
 
+        else if (request.IsPasswordGrantType())
+        {
+            // Validate the user credentials.
+            if (request.Username != "user@js-soft.com" || request.Password != "myP@55")
+            {
+                return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
+
+            var identity = new ClaimsIdentity(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+            identity.AddClaim(
+                OpenIddictConstants.Claims.Subject,
+                "71346D62-9BA5-4B6D-9ECA-755574D628D8",
+                OpenIddictConstants.Destinations.AccessToken);
+
+            identity.AddClaim(
+                OpenIddictConstants.Claims.Name,
+                "Alice",
+                OpenIddictConstants.Destinations.AccessToken);
+
+            var principal = new ClaimsPrincipal(identity);
+
+            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+
         else
         {
             throw new InvalidOperationException("The specified grant type is not supported.");

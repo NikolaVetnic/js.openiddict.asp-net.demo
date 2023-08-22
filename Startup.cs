@@ -41,6 +41,9 @@ public class Startup
         // Register the OpenIddict server components.
         .AddServer(options =>
         {
+            // ENMESHED SETTINGS
+            options.AllowPasswordFlow();
+
             options
                 // authorization code flow
                 .AllowAuthorizationCodeFlow()
@@ -50,16 +53,15 @@ public class Startup
                 // refresh tokens flow
                 .AllowRefreshTokenFlow();
 
-            // ENMESHED SETTINGS
-            options.AddDevelopmentSigningCertificate();
-            options.AddDevelopmentEncryptionCertificate();
-            options.AllowPasswordFlow();
-            options.SetAccessTokenLifetime(TimeSpan.FromSeconds(300));
-
             options
                 .SetAuthorizationEndpointUris("/connect/authorize")
                 .SetTokenEndpointUris("/connect/token")
                 .SetUserinfoEndpointUris("/connect/userinfo");
+
+            // ENMESHED SETTINGS
+            options.AddDevelopmentSigningCertificate();
+            options.AddDevelopmentEncryptionCertificate();
+            options.SetAccessTokenLifetime(TimeSpan.FromSeconds(300));
 
             // Encryption and signing of tokens
             options
